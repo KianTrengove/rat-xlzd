@@ -1,0 +1,16 @@
+
+/rat/db/set DETECTOR experiment "XLZD"
+/rat/db/set DETECTOR geo_file "XLZD/XLZD.geo"
+/rat/db/load XLZD/cryo.ratdb
+
+/run/initialize
+
+/vis/open OGLSQt
+/vis/scene/create
+/vis/scene/add/volume
+/vis/sceneHandler/attach
+/vis/viewer/set/upVector 0.0 0.0 1.0
+/vis/viewer/set/viewpointThetaPhi -90 135 
+/vis/viewer/set/style s
+/vis/viewer/flush
+
