@@ -1,0 +1,19 @@
+{
+name: "PMT",
+index: "R11410",
+//construction options:
+//cuboid: self-explanatory (cube)
+//LAPPD: was made for 1 specific PMT,  we don't need to consider it
+//revolution: light bulb shaped. Ex: https://www.hamamatsu.com/eu/en/product/optical-sensors/pmt/pmt_tube-alone/head-on-type/R7081.html
+//toroidal: more bowl than toroid shaped. Ex: https://et-enterprises.com/products/photomultipliers/product/p9390b-series
+valid_begin: [0,0],
+valid_end: [0,0],
+construction: toroidal,
+dynode_material: "kovar",
+glass_material: "quartz",
+pmt_vacuum_material: "vacuum",
+photocathode_surface: "photocathode_R11410",
+mirror_surface: "mirror",
+dynode_surface: "kovar",
+//blah blah blah ... find better specifications of this PMT and put them here
+}
