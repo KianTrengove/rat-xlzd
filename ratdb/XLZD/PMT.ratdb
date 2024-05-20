@@ -1,6 +1,7 @@
+//PMT file for R11410
 {
 name: "PMT",
-index: "R11410",
+index: "r11410",
 //construction options:
 //cuboid: self-explanatory (cube)
 //LAPPD: was made for 1 specific PMT,  we don't need to consider it
@@ -8,12 +9,22 @@ index: "R11410",
 //toroidal: more bowl than toroid shaped. Ex: https://et-enterprises.com/products/photomultipliers/product/p9390b-series
 valid_begin: [0,0],
 valid_end: [0,0],
-construction: toroidal,
+construction: "toroidal",
 dynode_material: "kovar",
 glass_material: "quartz",
 pmt_vacuum_material: "vacuum",
 photocathode_surface: "photocathode_R11410",
 mirror_surface: "mirror",
 dynode_surface: "kovar",
-//blah blah blah ... find better specifications of this PMT and put them here
+//blah blah blah ... find better specifications of this PMT and put them here currently these are temp values from another pmt
+
+dynode_radius: 23.0, // mm
+dynode_top:   -30.0, // mm
+wall_thickness: 3.0, // mm
+
+z_edge:   [ 4.020,  		1.00,   0.00, -16.75,   -30.00, -32.00, -119.0], // rough guess. Photocathode details are wrong
+rho_edge: [ 38.0 ,	 	       38.0, 38.0,  38.0,     26.65, 26.65, 26.65],   // this assumes that the photocathode covers the entire front face of the PMT
+z_origin: [ -1000000.00,  	0.00,   0.00,  10000.00,  31.00, 0.00],      // and wraps back another 1mm, in reality the photocathode diameter is ~64mm 
+
+noise_rate: 10000.0, // Hz
 }

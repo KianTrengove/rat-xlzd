@@ -20,7 +20,7 @@ valid_end: [0,0],
 mother: "world",
 type: "tube",
 r_max: 5500,
-r_min: 5495.24, //water tank is 4.76 cm thick
+r_min: 0, //water tank is 4.76 cm thick - shows up in cryo.geo
 size_z: 5500,
 material: "water",
 }

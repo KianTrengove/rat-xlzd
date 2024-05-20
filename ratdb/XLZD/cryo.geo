@@ -8,10 +8,10 @@ valid_begin: [0,0],
 valid_end: [0,0],
 mother: "water_tank",
 type: "tube",
-r_max: 5495.24,
-r_min: 5490.0, 
-size_z: 5490.0,
-material: "liquid_Xe"
+r_max: 1519.6,
+r_min: 0, 
+size_z: 1169.8,
+material: "stainless_steel"
 }
 
 {
@@ -21,9 +21,9 @@ valid_begin: [0,0],
 valid_end: [0,0],
 mother: "outer_cryo",
 type: "tube",
-r_max: 5490.0,
-r_min: 5480.0, 
-size_z: 5480.0,
+r_max: 1509.6,
+r_min: 0.0, 
+size_z: 1159.8,
 material: "vacuum"
 }
 
@@ -34,8 +34,8 @@ valid_begin: [0,0],
 valid_end: [0,0],
 mother: "water_tank",
 type: "tube",
-r_max: 5480.0,
-r_min: 5470.0, 
-size_z: 5470.0,
-material: "liquid_Xe"
+r_max: 1409.6,
+r_min: 0.0, 
+size_z: 1059.8,
+material: "stainless_steel"
 }
