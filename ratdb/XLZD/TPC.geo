@@ -10,6 +10,8 @@ type: "tube",
 r_max: 1400,
 r_min: 0,
 size_z: 1000,
+material: "liquid_Xe",
+color: [0.15, 0.0, 0.8, 1.0],
 }
 
 

@@ -23,5 +23,6 @@ r_max: 5500,
 r_min: 0, //water tank is 4.76 cm thick - shows up in cryo.geo
 size_z: 5500,
 material: "water",
+color: [0.6, 1.0, 1.0, 0.5],
 }
 
