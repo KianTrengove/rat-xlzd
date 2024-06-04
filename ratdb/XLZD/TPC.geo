@@ -11,7 +11,6 @@ r_max: 1419.6,
 r_min: 1299.6,
 size_z:  849.8,
 material: "liquid_Xe",
-offset: [0, 0, -699.8],
 color: [0.15, 0.0, 0.8, 1.0],
 }
 
@@ -40,7 +39,7 @@ r_max: 1299.6,
 r_min: 0,
 size_z:  50.0,
 material: "liquid_Xe",
-offset: [0, 0, -699.8],
+posz: -699.8,
 color: [0.15, 0.0, 0.8, 1.0],
 }
 
@@ -55,7 +54,7 @@ r_max: 1299.6,
 r_min: 0,
 size_z:  50.0,
 material: "liquid_Xe",
-offset: [0, 0, 699.8],
+posz: 699.8,
 color: [0.15, 0.0, 0.8, 1.0],
 }
 
@@ -70,6 +69,6 @@ r_max: 1419.6,
 r_min: 1299.6,
 size_z:  50.0,
 material: "Xe",
-offset: [0, 0, 699.8],
+posz: 699.8,
 color: [0.15, 0.0, 0.8, 1.0],
 }

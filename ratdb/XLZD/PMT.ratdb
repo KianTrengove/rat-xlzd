@@ -16,15 +16,17 @@ pmt_vacuum_material: "vacuum",
 photocathode_surface: "photocathode_R11410",
 mirror_surface: "mirror",
 dynode_surface: "kovar",
-//blah blah blah ... find better specifications of this PMT and put them here currently these are temp values from another pmt
 
-dynode_radius: 23.0, // mm
-dynode_top:   -30.0, // mm
-wall_thickness: 3.0, // mm
+//technicall the dynode has 12 stages, which ideally we would model each one. 
+//instead we're just modeling this whole thing as a tube for now
 
-z_edge:   [ 4.020,  		1.00,   0.00, -16.75,   -30.00, -32.00, -119.0], // rough guess. Photocathode details are wrong
-rho_edge: [ 38.0 ,	 	       38.0, 38.0,  38.0,     26.65, 26.65, 26.65],   // this assumes that the photocathode covers the entire front face of the PMT
-z_origin: [ -1000000.00,  	0.00,   0.00,  10000.00,  31.00, 0.00],      // and wraps back another 1mm, in reality the photocathode diameter is ~64mm 
+dynode_radius: 38.0, // mm
+dynode_top:   -30.0, // mm - just a guess
+wall_thickness: 1.0, // mm - just a guess
 
-noise_rate: 10000.0, // Hz
+z_edge:   [ 4.020], // mm - just a guess
+rho_edge: [ 38.0], // mm - just a guess
+z_origin: [ 0.00], // mm - just a guess
+
+noise_rate: 10000.0, // Hz - Just a guess
 }
