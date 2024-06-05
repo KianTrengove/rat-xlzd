@@ -58,4 +58,5 @@ material: "water",
 color:[1.0, 1.0, 1.0, 0.5],
 r_hole: 38,
 pos_table: "PTFE",
+posz: -842.8,
 }

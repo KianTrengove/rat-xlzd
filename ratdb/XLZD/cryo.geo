@@ -25,7 +25,7 @@ type: "tube",
 r_max: 1509.6,
 r_min: 0.0, 
 size_z: 1159.8,
-material: "vacuum",
+material: "cryostat_vacuum",
 color: [0.0, 0.0, 0.0, 0.5],
 }
 
