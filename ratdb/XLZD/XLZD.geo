@@ -26,3 +26,36 @@ material: "water",
 color: [0.6, 1.0, 1.0, 0.5],
 }
 
+//PMTS and PTFE reflector
+
+{
+name: "GEO",
+index: "pmts",
+valid_begin: [0,0],
+valid_end: [0,0],
+mother: "water_tank",
+type: "pmtarray",
+pmt_model: "r11410", 
+pmt_detector_type: "idpmt", 
+sensitive_detector: "/mydet/pmt/inner",
+efficiency_correction: 1.000,
+pos_table: "PMTINFO_inner", 
+orientation: "manual",
+light_cone: 0,
+}
+
+{
+ name: "GEO",
+index: "ptfe_liner"
+valid_begin: [0,0],
+valid_end: [0,0],
+mother:"water_tank"
+type:"ptube"
+r_max: 1419.6,
+r_min: 0,
+size_z: 0.5,
+material: "water",
+color:[1.0, 1.0, 1.0, 0.5],
+r_hole: 38,
+pos_table: "PTFE",
+}
