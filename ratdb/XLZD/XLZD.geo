@@ -45,7 +45,7 @@ light_cone: 0,
 }
 
 {
- name: "GEO",
+name: "GEO",
 index: "ptfe_liner"
 valid_begin: [0,0],
 valid_end: [0,0],
