@@ -1,0 +1,39 @@
+//PMT file for R11410
+{
+name: "PMT",
+index: "r11410",
+//construction options:
+//cuboid: self-explanatory (cube)
+//LAPPD: was made for 1 specific PMT,  we don't need to consider it
+//revolution: light bulb shaped. Ex: https://www.hamamatsu.com/eu/en/product/optical-sensors/pmt/pmt_tube-alone/head-on-type/R7081.html
+//toroidal: more bowl than toroid shaped. Ex: https://et-enterprises.com/products/photomultipliers/product/p9390b-series
+valid_begin: [0,0],
+valid_end: [0,0],
+construction: "toroidal",
+dynode_material: "kovar",
+glass_material: "quartz",
+pmt_vacuum_material: "pmt_vacuum",
+photocathode_surface: "photocathode_R11410",
+mirror_surface: "mirror",
+dynode_surface: "kovar",
+
+//the documentation for how the toroidal pmts are constructed is completely absent.
+//so I've just done my best by following ToroidalPMTContruction.cc
+//dynode stuff is mostly self-evident
+
+//z_edge, rho_edge, and z_origin, seem to be so that you can construct different layers, with each layer being a column
+
+dynode_radius: 23.0, // mm - just a guess
+dynode_top:   -30.0, // mm - just a guess
+wall_thickness: 1.0, // mm - just a guess
+
+z_edge:   [ 4.020, 1.00,   0.00, -16.75, -30.00, -32.00, -119.0], // mm - just a guess
+rho_edge: [ 38.0 ,	38.0, 38.0,  38.0, 26.65, 26.65, 26.65],  // mm - just a guess
+z_origin: [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], // mm - just a guess - 
+//Being honest, I still don't really understand the z_edge and z_origin options and still need to research them more
+//I copied the z values from a similiarly shaped pmt that rat already has
+//I've yet to find an instance where z_origin changes teh geometry, so I just set them all to 0
+//Changing z_edge in almost any way has a habit of resulting in a crash
+
+noise_rate: 10000.0, // Hz - Just a guess
+}

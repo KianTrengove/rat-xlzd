@@ -1,0 +1,39 @@
+//this is basically just for kovar
+{
+name: "MATERIAL",
+index: "kovar",
+valid_begin : [0, 0],
+valid_end : [0, 0],
+density: 8.0,
+nelements: 6,
+nmaterials: 0,
+elements: ["Iron", "Nickel", "Cobalt", "Carbon", "Silicon", "Manganese"],
+elemprop: [0.5349, 0.29, 0.17, 0.0001, 0.002, 0.003] //prop stands for proportions not property
+}
+
+{
+name: "MATERIAL",
+index: "Xe", //gaseous xenon
+valid_begin : [0, 0],
+valid_end : [0, 0],
+density: 1.217,
+nelements: 1,
+elements: ["Xenon"],
+elemprop: [1.0],
+nmaterials: 0,
+}
+
+//this seems to be some weird placeholder for the pmt materials that is required. All the pmts rat predefined have this
+{
+name: "MATERIAL",
+index: "photocathode_R11410",
+valid_begin : [0, 0],
+valid_end : [0, 0],
+density: 5.0,
+nelements: 1,
+nmaterials: 0,
+elements: ["Potassium"],
+elemprop: [1.0],
+}
+
+

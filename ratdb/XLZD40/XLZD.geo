@@ -23,7 +23,7 @@ r_max: 5500,
 r_min: 0, //water tank is 4.76 cm thick - shows up in cryo.geo
 size_z: 5500,
 material: "water",
-color: [0.6, 1.0, 1.0, 0.5],
+color: [0.6, 1.0, 1.0, 0.1],
 }
 
 //PMTS and PTFE reflector
@@ -42,21 +42,39 @@ efficiency_correction: 1.000,
 pos_table: "PMTINFO_inner", 
 orientation: "manual",
 light_cone: 0,
+color:[1.0, 1.0, 1.0, 0.7],
 }
 
-{
-name: "GEO",
-index: "ptfe_liner"
-valid_begin: [0,0],
-valid_end: [0,0],
-mother:"water_tank"
-type:"ptube"
-r_max: 1419.6,
-r_min: 0,
-size_z: 0.5,
-material: "water",
-color:[1.0, 1.0, 1.0, 0.5],
-r_hole: 38,
-pos_table: "PTFE",
-posz: -842.8,
-}
+//{
+//name: "GEO",
+//index: "ptfe_liner_bot"
+//valid_begin: [0,0],
+//valid_end: [0,0],
+//mother:"water_tank"
+//type:"ptube"
+//r_max: 1419.6,
+//r_min: 0,
+//size_z: 5.5,
+//material: "water",
+//color:[1.0, 0.0, .0, 0.6],
+//r_hole: 76,
+//pos_table: "PTFE",
+//posz: -842.8,
+//}
+
+//{
+//name: "GEO",
+//index: "ptfe_liner_top"
+//valid_begin: [0,0],
+//valid_end: [0,0],
+//mother:"water_tank"
+//type:"ptube"
+//r_max: 1419.6,
+//r_min: 0,
+//size_z: 0.5,
+//material: "water",
+//color:[1.0, 0.0, 0.0, 0.6],
+//r_hole: 76,
+//pos_table: "PTFE",
+//posz: 842.8,
+//}
