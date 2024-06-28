@@ -10,4 +10,4 @@ If RAT is not already installed you can install following the instructions here:
 
 Alternatively a basic setup script has been provided which will install RAT along with dependencies needed. The setupscript will additionally move the json files and macro file to their intended locations.
 
-The setupscript is a stripped down version of what RAT provides themselves at: [https://github.com/rat-pac/ratpac-setup](https://github.com/rat-pac/ratpac-setup) to only include the components necessary for XLZD.
+The setup script is a stripped down version of what RAT provides themselves at: [https://github.com/rat-pac/ratpac-setup](https://github.com/rat-pac/ratpac-setup) to only include the components necessary for XLZD.
