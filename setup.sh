@@ -11,7 +11,7 @@ exec 2>&1
 
 function install(){
     ## Array of installables
-    declare -a install_options=("cmake" "root" "geant4" "nlopt")
+    declare -a install_options=("cmake" "root" "geant4" "nlopt" "ratpac")
     declare -A install_selection
     for element in "${install_options[@]}"
     do
