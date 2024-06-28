@@ -329,7 +329,7 @@ function install_ratpac()
     fi
     cd ../
     mv -v ./ratdb/* ./ratpac/ratdb
-    mv -v ./macro/* ./ratpac/macro
+    mv -v ./macros/* ./ratpac/macros
     
 }
 
