@@ -26,7 +26,7 @@ material: "water",
 color: [0.6, 1.0, 1.0, 0.1],
 }
 
-//PMTS and PTFE reflector
+//PMTS
 
 {
 name: "GEO",
