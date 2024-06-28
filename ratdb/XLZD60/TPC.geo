@@ -72,3 +72,45 @@ material: "Xe",
 posz: 1587.75,
 color: [0.15, 0.0, 0.8, 1.0],
 }
+
+{
+name: "GEO",
+index: "target_surface",
+valid_begin: [0, 0],
+valid_end: [0, 0],
+mother: "outer_cryo", 
+type: "border",
+volume1: "xe_skin",
+volume2: "inner_cryo",
+reverse: 0, 
+surface: "ptfe",
+color: [1.0, 1.0, 1.0],
+}
+
+{
+name: "GEO",
+index: "top_surface",
+valid_begin: [0, 0],
+valid_end: [0, 0],
+mother: "outer_cryo", 
+type: "border",
+volume1: "gas_xe",
+volume2: "inner_cryo",
+reverse: 0, 
+surface: "ptfe",
+color: [1.0, 1.0, 1.0],
+}
+
+{
+name: "GEO",
+index: "bot_surface",
+valid_begin: [0, 0],
+valid_end: [0, 0],
+mother: "outer_cryo", 
+type: "border",
+volume1: "rfr_xe",
+volume2: "inner_cryo",
+reverse: 0, 
+surface: "ptfe",
+color: [1.0, 1.0, 1.0],
+}
