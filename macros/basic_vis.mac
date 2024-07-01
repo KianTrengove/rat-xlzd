@@ -1,6 +1,6 @@
 
-/rat/db/set DETECTOR experiment "XLZD40"
-/rat/db/set DETECTOR geo_file "XLZD40/XLZD.geo"
+/rat/db/set DETECTOR experiment "XLZD60"
+/rat/db/set DETECTOR geo_file "XLZD60/XLZD.geo"
 /rat/db/load XLZD40/ELEMENTS.ratdb
 /rat/db/load XLZD40/MATERIALS_XLZD.ratdb
 /rat/db/load XLZD40/OPTICS_XLZD.ratdb
