@@ -1,14 +1,13 @@
 
-/rat/db/set DETECTOR experiment "XLZD60"
-/rat/db/set DETECTOR geo_file "XLZD60/XLZD.geo"
-/rat/db/load XLZD60/ELEMENTS.ratdb
-/rat/db/load XLZD60/MATERIALS_XLZD.ratdb
-/rat/db/load XLZD60/OPTICS_XLZD.ratdb
-/rat/db/load XLZD60/PMT.ratdb
-/rat/db/load XLZD60/cryo.geo
-/rat/db/load XLZD60/TPC.geo
-/rat/db/load XLZD60/PTFE.ratdb
-/rat/db/load XLZD60/PMTINFO_inner.ratdb
+/rat/db/set DETECTOR experiment "XLZD"
+/rat/db/set DETECTOR geo_file "XLZD/XLZD60/XLZD.geo"
+/rat/db/load XLZD/ELEMENTS.ratdb
+/rat/db/load XLZD/MATERIALS_XLZD.ratdb
+/rat/db/load XLZD/OPTICS_XLZD.ratdb
+/rat/db/load XLZD/PMT.ratdb
+/rat/db/load XLZD/XLZD60/cryo.geo
+/rat/db/load XLZD/XLZD60/TPC.geo
+/rat/db/load XLZD/XLZD60/PMTINFO_inner.ratdb
 
 
 /run/initialize
