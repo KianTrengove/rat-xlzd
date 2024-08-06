@@ -330,6 +330,7 @@ function install_ratpac()
     cd ../
     mv -v ./ratdb/* ./ratpac/ratdb
     mv -v ./macros/* ./ratpac/macros
+    mv -v ./python/* ./ratpac/python
     
 }
 
