@@ -1,3 +1,5 @@
+#Kian Trengove - August 6th 2024, kiantrengove@gmail.com
+
 
 #RAT Stuff
 from ratproc.base import Processor
