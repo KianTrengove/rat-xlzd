@@ -49,14 +49,13 @@ class TrayProc(Processor):
         #Also note the caps, GetTotalScintCentroid uses TVector3
         time = mc_data.GetInitialScintTime()
         energy = mc_data.GetTotalScintEdep()
-        num_tracks = ds.GetMC().GetMCTrackCount()
         depositType = DarwinEnergyDeposit.NotSet
         if self.name == "neutron":
             depositType = DarwingEnergyDeposit.NR
         elif self.name == "e-":
             depositType = DarwinEnergyDeposit.beta
         if depositType == DarwinEnergyDeposit.NotSet:
-            return 1 #see base.py 1 = FAIL
+            return 2 #see base.py 2 = ABORT
         
 
         self.deposits.append(DarwinEnergyDeposit(pos = pos, time = time, energy = energy, field = 200, type = depositType)) #field is temporary get that later
@@ -107,7 +106,7 @@ class RATDeposit(icetray.I3Module):
         self.mcdeposit = self.GetParameter("MCDeposits")
         self.count = 0
         self.nevents = len(self.mcdeposit)
-        
+
 
 
     def DAQ(self, frame):
@@ -130,7 +129,6 @@ class ConfigureG4(icetray.I3Module):
         To prove this as a proof of concept, I've just added this module that does nothing else except set G4InputExtraDeps as True
         """
         icetray.I3Module.__init__(self, context)
-        self.AddParameter("Dummy Parameter", "This is a dummy parameter that has to exist for the module I think?", "")
 
     def Configure(self):
         pass
