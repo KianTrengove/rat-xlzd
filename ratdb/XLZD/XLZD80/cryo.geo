@@ -1,5 +1,11 @@
-//this is a very basic placeholder for the outer and inner cryo
-//make sure to load it in your macro!
+//
+//Kian Trengove - May 16th 2024, 
+//Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
+
+//Implementation of the XLZD geometry for 40, 60, 80t based on the implementation in baccarat
+//For questions, comments, concerns contact me at:
+//kiantrengove@gmail.com or ktrengove@albany.edu
+//
 
 {
 name: "GEO",

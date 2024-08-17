@@ -1,4 +1,11 @@
-#Kian Trengove - August 6th 2024, kiantrengove@gmail.com
+'''
+Kian Trengove - August 6th 2024, 
+Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
+
+Implementation of Tray inside of RAT - Takes the enery deposits from Geant4/Rat and feeds them into Tray
+For questions, comments, concerns contact me at:
+kiantrengove@gmail.com or ktrengove@albany.edu
+'''
 
 
 #RAT Stuff
@@ -55,12 +62,12 @@ class TrayProc(Processor):
         elif self.name == "e-":
             depositType = DarwinEnergyDeposit.beta
         if depositType == DarwinEnergyDeposit.NotSet:
-            return 2 #see base.py 2 = ABORT
+            return 2 #see base.py; 2 = ABORT
         
 
         self.deposits.append(DarwinEnergyDeposit(pos = pos, time = time, energy = energy, field = 200, type = depositType)) #field is temporary get that later
 
-        return 0 #see base.py 0 = OK
+        return 0 #see base.py; 0 = OK
 
 
     def finish(self):
