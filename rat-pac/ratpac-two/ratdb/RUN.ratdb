@@ -1,0 +1,10 @@
+/* Run conditions */
+{
+name: "RUN",
+run_range: [0, 0],
+// index into channel_status table to use
+channel_status: "",
+
+runtype: 0,
+}
+

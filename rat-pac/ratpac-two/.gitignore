@@ -1,0 +1,34 @@
+# RAT configuration files
+build*
+install*
+src/core/include/RAT/Config.hh
+*.pyc
+.sconsign
+.sconsign.dblite
+.sconf_temp
+lib
+bin
+config.log
+src/core/config.hh
+# Eclipse aux files
+.cproject
+.project
+.pydevproject
+.settings
+src/core/Config.hh
+
+*.log
+*.root
+*.heprep
+.DS_Store
+*.gif
+*.jpg
+*.jpeg
+*.eps
+
+.idea/
+.vscode/
+doc/_build/
+.pytest_cache*
+ratpac.*sh
+RatpacConfig.cmake

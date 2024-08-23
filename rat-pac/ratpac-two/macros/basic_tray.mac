@@ -1,0 +1,42 @@
+
+/rat/db/set DETECTOR experiment "XLZD"
+
+/rat/db/load XLZD/ELEMENTS.ratdb
+/rat/db/load XLZD/MATERIALS_XLZD.ratdb
+/rat/db/load XLZD/OPTICS_XLZD.ratdb
+/rat/db/load XLZD/PMT.ratdb
+
+/rat/db/set DETECTOR geo_file "XLZD/XLZD60/XLZD.geo"
+/rat/db/load XLZD/XLZD60/cryo.geo
+/rat/db/load XLZD/XLZD60/TPC.geo
+/rat/db/load XLZD/XLZD60/PMTINFO_inner.ratdb
+
+
+/run/initialize
+
+#/vis/open OGLSQt
+#/vis/scene/create
+#/vis/scene/add/volume
+#/vis/sceneHandler/attach
+
+#/vis/viewer/addCutawayPlane 0 0 0 cm 1 0 0
+
+#/vis/viewer/set/upVector 0.0 0.0 1.0
+#/vis/viewer/set/viewpointThetaPhi -95 -30
+#/vis/viewer/zoomTo 1.5
+#/vis/viewer/set/style s
+#/vis/viewer/refresh
+
+# BEGIN EVENT LOOP
+/rat/proc count
+/rat/procset update 10
+/rat/proclast python
+/rat/procset class "ratproc.TrayProc"
+/rat/procset init "TrayProc(particle=neutron)" #there's no easy way to get the particle name once in Tray, so we initialize it here
+#END EVENT LOOP
+
+/generator/add combo gun:point
+/generator/vtx/set neutron -1 0 0 0.1
+/generator/pos/set 0.0 0.0 0.0
+
+/run/beamOn 5000
