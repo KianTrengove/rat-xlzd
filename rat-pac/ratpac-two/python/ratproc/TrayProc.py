@@ -91,6 +91,8 @@ class TrayProc(Processor):
         self.tray.AddModule(ConfigureG4)
         self.tray.AddModule(RATDeposit, MCDeposits=self.deposits)
         self.tray.AddModule(DarwinNESTQuantaCalculator) #after all the frames with the energy depositions have been calculated we get the quanta
+        
+        #TODO: Currently the DarwinNestQuantaCalculator uses the Xenon-10 detector template, but really we should replace this with something more modular that takes inputs from RAT
 
         # Module that writes the output
         #self.tray.AddModule("I3Writer", "writer", Filename="output.i3.bz2") #if we prefer to keep it in the tray format use this instead
