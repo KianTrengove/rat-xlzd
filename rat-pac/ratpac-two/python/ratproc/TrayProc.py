@@ -79,7 +79,7 @@ class TrayProc(Processor):
 
         self.tray.AddModule(DarwinSimParams, DriftField=DriftField, CathodeField = CathodeField, LXeDensity = LXeDensity, PMTQE=1.0) #letting Quantum Efficiency be 1 for now
         
-        r_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_max") #Note that this depends on the geometry actually being called inner_cryo like in cryo.geo
+        r_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_min") #Note that this depends on the geometry actually being called inner_cryo like in cryo.geo
         z_gate = self.db.GetLink("GEO", "inner_cryo").GetD("size_z")*2 #Don't know where the gate is, I'm just putting it at the top of the inner cryo for now, even though that's definately incorrect
         z_lxe = self.db.GetLink("GEO", "xe_skin").GetD("size_z")*2 #Geant uses half z, NEST doesn't
         z_pmt_top = self.db.GetLink("PMTINFO_inner").GetDArray("z")[0] #likewise for PMTINFO_inner
