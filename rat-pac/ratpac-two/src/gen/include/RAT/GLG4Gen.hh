@@ -57,12 +57,6 @@ class GLG4Gen_Combo : public GLG4Gen {
   virtual void SetPosState(G4String state);
   virtual G4String GetPosState() const;
 
-  G4String GetPrimaryName(){
-    G4String name = "";
-    name = vertexGen->GetprimaryName();
-    return name;
-  };
-
  protected:
   G4String stateStr;
   GLG4TimeGen *timeGen;

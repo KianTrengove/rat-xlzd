@@ -13,7 +13,6 @@
 
 #include <TObject.h>
 #include <TVector3.h>
-#include <RAT/GEN/GLG4Gen.hh>
 
 #include <map>
 #include <string>
@@ -95,15 +94,6 @@ class MCSummary : public TObject {
 
   virtual std::vector<std::vector<double>> GetPMTPhotonInfo() { return pmtHitVector; }
 
-  virtual void SetPrimaryName(std::string name) { 
-    //A bit of a weird way to do this, but GLG4Gen will set the primary name and then we can get the name in TrayProc
-    //Note that this is curretnly only implemented for the gun generators, and not any other kind of generator
-    primary_name = name;
-  }
-  virtual std::string GetPrimaryName() { 
-    return primary_name;
-  }
-
   ClassDef(MCSummary, 4);
 
  protected:
@@ -121,7 +111,6 @@ class MCSummary : public TObject {
   StringDoubleMap energyLoss;
   std::vector<std::vector<double>> photonComposition;
   std::vector<std::vector<double>> pmtHitVector;
-  std::string primary_name;
 };
 
 }  // namespace DS

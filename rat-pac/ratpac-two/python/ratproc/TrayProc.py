@@ -34,7 +34,7 @@ from icecube.DarwinChainModules import DarwinNESTQuantaCalculator, DarwinEnergyD
 import numpy as np
 
 class TrayProc(Processor):
-    def __init__(self):
+    def __init__(self, particle="e-"):
         self.tray = I3Tray()
 
         self.tray.AddModule( "I3InfiniteSource", Stream=icetray.I3Frame.DAQ)
@@ -46,21 +46,20 @@ class TrayProc(Processor):
 
         self.db = RAT.DB.Get()
 
-        
+        self.name = particle #default particle is an electron
         
 
     def dsevent(self, ds):
         mc_data = ds.GetMC().GetMCSummary() #gets the monte carlo information
-        name = ds.GetMC().GetMCParticle(0).
         pos = dataclasses.I3Position(mc_data.GetTotalScintCentroid().X(), mc_data.GetTotalScintCentroid().Y(), mc_data.GetTotalScintCentroid().Z()) 
         #We might want to use something other than energy centroid? (see MCSummary.hh for details)
         #Also note the caps, GetTotalScintCentroid uses TVector3
         time = mc_data.GetInitialScintTime()
         energy = mc_data.GetTotalScintEdep()
         depositType = DarwinEnergyDeposit.NotSet
-        if name == "neutron":
+        if self.name == "neutron":
             depositType = DarwingEnergyDeposit.NR
-        elif name == "e-":
+        elif self.name == "e-":
             depositType = DarwinEnergyDeposit.beta
         if depositType == DarwinEnergyDeposit.NotSet:
             return 2 #see base.py; 2 = ABORT

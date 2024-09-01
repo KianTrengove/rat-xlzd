@@ -32,6 +32,7 @@
 /rat/procset update 10
 /rat/proclast python
 /rat/procset class "ratproc.TrayProc"
+/rat/procset init "TrayProc(particle=neutron)" #there's no easy way to get the particle name once in Tray, so we initialize it here
 #END EVENT LOOP
 
 /generator/add combo gun:point
