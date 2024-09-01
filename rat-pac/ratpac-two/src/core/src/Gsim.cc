@@ -533,6 +533,7 @@ void Gsim::MakeEvent(const G4Event *g4ev, DS::Root *ds) {
   summary->SetNumScintPhoton(exinfo->numScintPhoton);
   summary->SetNumReemitPhoton(exinfo->numReemitPhoton);
   summary->SetNumCerenkovPhoton(exinfo->numCerenkovPhoton);
+  summary->SetPrimaryName(theRunManager->GetUserPrimaryGeneratorAction())
   // summary->SetPMTPhotonInfo(GLG4PMTOpticalModel::pmtHitVector);
 
   // GLG4Scint::ResetTimeChargeMatrix();

@@ -31,6 +31,11 @@ elemprop: [1.0],
 nmaterials: 0,
 }
 
+//The optical properties for "xenon" (actually Gd taken from elsewhere) are here because in the default rat implementation RAT checks 
+//to see if the optics are implemented to deside whether something is a detector event or not. 
+//As we begin implementing S1/S2 generation from NEST into RAT this will no longer be needed and should be removed
+//Kian - Sep 1st 2024
+
 {
 name: "OPTICS",
 index: "liquid_Xe", //material properties of liquid_Xe already in rat by default, just need to define the optics.
@@ -50,10 +55,10 @@ SCINTILLATION_WLS_value1: [200.0, 203.0, 205.0, 207.0, 209.0, 211.0, 213.0, 215.
 SCINTILLATION_WLS_value2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.3325e-05, 2.5735e-05, 2.774e-05, 4.345e-05, 6.395e-05, 3.86e-05, 2.735e-05, 2.53e-05, 2.98e-05, 3.375e-05, 3.22e-05, 3.295e-05, 4.1e-05, 3.865e-05, 6.52e-05, 7.65e-05, 0.000134, 0.0022, 0.00484, 0.0088, 0.011, 0.01276, 0.01408, 0.0132, 0.01364, 0.01408, 0.01628, 0.01892, 0.02068, 0.02244, 0.02112, 0.0198, 0.01848, 0.01672, 0.01584, 0.01628, 0.01672, 0.01672, 0.01672, 0.01584, 0.01385, 0.0125, 0.0114, 0.0108, 0.0104, 0.01, 0.0095, 0.00905, 0.00855, 0.00785, 0.00725, 0.0065, 0.00595, 0.00535, 0.00485, 0.0046, 0.0042, 0.0039, 0.00365, 0.0034, 0.0031, 0.00295, 0.0027, 0.00235, 0.0022, 0.002, 0.0018, 0.00165, 0.00145, 0.00135, 0.00125, 0.00115, 0.001, 0.00095, 0.0009, 0.00075, 0.00075, 0.00065, 0.0006, 0.00055, 0.00045, 0.00045, 0.0004, 0.00035, 0.00035, 0.00025, 0.0003, 0.00025, 0.0002, 0.0002, 0.0002, 0.00015, 0.00015, 0.00015, 0.00015, 0.0001, 0.0001, 0.0001, 0.0001, 5e-05, 0.0001, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 5e-05, 0.0, 5e-05, 5e-05, 0.0, 5e-05, 0.0, 5e-05, 0.0, 5e-05, 0.0, 0.0, 5e-05, 0.0, 0.0, 5e-05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ],
 PROPERTY_LIST: ["LIGHT_YIELD", "SCINTILLATION", "SCINTILLATION_WLS", "REEMISSION_PROB",] 
                                 //currently no optics for the lXe scintillation is in place. Note that the scintillation options above are NOT for xenon and are just a placeholder copied
-                                //from the validation geometry in order to test Tray functionality.
+                                //from the "validation" geometry in order to test Tray functionality.
 }
 
-//this seems to be some weird placeholder for the pmt materials that is required. All the pmts rat predefined have this
+//this seems to be a placeholder for the pmt materials that is required. All the pmts rat predefined have this
 {
 name: "MATERIAL",
 index: "photocathode_R11410",

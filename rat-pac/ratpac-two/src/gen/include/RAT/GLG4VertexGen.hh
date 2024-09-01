@@ -75,6 +75,9 @@ class GLG4VertexGen_Gun : public GLG4VertexGen {
   virtual G4String GetState();
   // returns current state formatted as above
 
+  G4String GetPrimaryName() { return _pDef->GetParticleName(); }
+  //returns generated particle's name
+
  public:
   // the following useful static const data should be universally accessable
   // (I copied it from the G4IonTable source code, where it is privatized
@@ -112,6 +115,9 @@ class GLG4VertexGen_Gun2 : public GLG4VertexGen {
 
   virtual G4String GetState();
   // returns current state formatted as above
+
+  G4String GetPrimaryName() { return _pDef->GetParticleName(); }
+  //returns generated particle's name
 
  public:
   // the following useful static const data should be universally accessable

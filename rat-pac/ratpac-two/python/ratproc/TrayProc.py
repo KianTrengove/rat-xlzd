@@ -34,7 +34,7 @@ from icecube.DarwinChainModules import DarwinNESTQuantaCalculator, DarwinEnergyD
 import numpy as np
 
 class TrayProc(Processor):
-    def __init__(self, particle="e-"):
+    def __init__(self):
         self.tray = I3Tray()
 
         self.tray.AddModule( "I3InfiniteSource", Stream=icetray.I3Frame.DAQ)
@@ -46,20 +46,21 @@ class TrayProc(Processor):
 
         self.db = RAT.DB.Get()
 
-        self.name = particle #default particle is an electron
+        
         
 
     def dsevent(self, ds):
         mc_data = ds.GetMC().GetMCSummary() #gets the monte carlo information
+        name = ds.GetMC().GetMCParticle(0).
         pos = dataclasses.I3Position(mc_data.GetTotalScintCentroid().X(), mc_data.GetTotalScintCentroid().Y(), mc_data.GetTotalScintCentroid().Z()) 
         #We might want to use something other than energy centroid? (see MCSummary.hh for details)
         #Also note the caps, GetTotalScintCentroid uses TVector3
         time = mc_data.GetInitialScintTime()
         energy = mc_data.GetTotalScintEdep()
         depositType = DarwinEnergyDeposit.NotSet
-        if self.name == "neutron":
+        if name == "neutron":
             depositType = DarwingEnergyDeposit.NR
-        elif self.name == "e-":
+        elif name == "e-":
             depositType = DarwinEnergyDeposit.beta
         if depositType == DarwinEnergyDeposit.NotSet:
             return 2 #see base.py; 2 = ABORT
@@ -98,6 +99,46 @@ class TrayProc(Processor):
         #self.tray.AddModule("I3Writer", "writer", Filename="output.i3.bz2") #if we prefer to keep it in the tray format use this instead
         self.tray.AddModule(ROOTOutput, Filename="output.root", TreeLength=len(self.deposits))
         self.tray.Execute()
+
+#pseudocode
+class S1Photon(Nph, pos):
+    def __init__(self, context):
+        """
+        This is initialization function, where one defines parameters
+        """
+        icetray.I3Module.__init__(self, context)
+        self.AddParameter("MCDeposits", "The Monte Carlo Deposits from RAT", I3VectorDarwinEnergyDeposit([]))
+
+    def Configure(self):
+        """
+        This function configures the module, for example - get parameters etc.
+        """
+        self.mcdeposit = self.GetParameter("MCDeposits")
+        self.count = 0
+        self.nevents = len(self.mcdeposit)
+
+
+
+    def DAQ(self, frame):
+        void DarwinPythonInterface::PropagateS1PhotonSource(double x_, double y_, double z_, int Nph)
+        //std::cout<<"Will propagate one photon source \n"
+        //         <<"\tx = "<<x_<<"\n\ty = "<<y_<<"\n\tz = "<<z_<<"\n\tN photons = "<<Nph<<std::endl;
+
+        RunUIcommand("/rat/generator/gun  6.98 eV");
+        RunUIcommand("/darwin/gun/particle opticalphoton");
+        RunUIcommand("/darwin/gun/type Point");
+        RunUIcommand("/darwinxe/gun/angtype iso");
+        std::string hCommand;
+        hCommand = "/darwin/gun/center "+std::to_string(x_) 
+                                +" "+std::to_string(y_) 
+                                +" "+std::to_string(z_)+" mm";
+        RunUIcommand(hCommand);
+        hCommand = "/darwin/gun/numberofparticles "+std::to_string(Nph);
+        RunUIcommand(hCommand); 
+        RunUIcommand("/run/beamOn 1");
+
+        
+
         
 
 class RATDeposit(icetray.I3Module):

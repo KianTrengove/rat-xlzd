@@ -33,7 +33,7 @@ dynode_surface: "kovar",
 
 //z_edge, rho_edge, and z_origin, seem to be so that you can construct different layers, with each layer being a column
 
-dynode_radius: 23.0, // mm - just a guess
+dynode_radius: 38.1, // mm - just a guess
 dynode_top:   -30.0, // mm - just a guess
 wall_thickness: 1.0, // mm - just a guess
 
