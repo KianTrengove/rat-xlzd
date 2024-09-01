@@ -99,23 +99,6 @@ class TrayProc(Processor):
         self.tray.AddModule(ROOTOutput, Filename="output.root", TreeLength=len(self.deposits))
         self.tray.Execute()
 
-#pseudocode
-class S1Photon(Nph, pos):
-    def __init__(self, context):
-        """
-        This is initialization function, where one defines parameters
-        """
-        icetray.I3Module.__init__(self, context)
-        self.AddParameter("MCDeposits", "The Monte Carlo Deposits from RAT", I3VectorDarwinEnergyDeposit([]))
-
-    def Configure(self):
-        """
-        This function configures the module, for example - get parameters etc.
-        """
-        self.mcdeposit = self.GetParameter("MCDeposits")
-        self.count = 0
-        self.nevents = len(self.mcdeposit)
-
 
 
     def DAQ(self, frame):
