@@ -99,26 +99,6 @@ class TrayProc(Processor):
         self.tray.AddModule(ROOTOutput, Filename="output.root", TreeLength=len(self.deposits))
         self.tray.Execute()
 
-
-
-    def DAQ(self, frame):
-        void DarwinPythonInterface::PropagateS1PhotonSource(double x_, double y_, double z_, int Nph)
-        //std::cout<<"Will propagate one photon source \n"
-        //         <<"\tx = "<<x_<<"\n\ty = "<<y_<<"\n\tz = "<<z_<<"\n\tN photons = "<<Nph<<std::endl;
-
-        RunUIcommand("/rat/generator/gun  6.98 eV");
-        RunUIcommand("/darwin/gun/particle opticalphoton");
-        RunUIcommand("/darwin/gun/type Point");
-        RunUIcommand("/darwinxe/gun/angtype iso");
-        std::string hCommand;
-        hCommand = "/darwin/gun/center "+std::to_string(x_) 
-                                +" "+std::to_string(y_) 
-                                +" "+std::to_string(z_)+" mm";
-        RunUIcommand(hCommand);
-        hCommand = "/darwin/gun/numberofparticles "+std::to_string(Nph);
-        RunUIcommand(hCommand); 
-        RunUIcommand("/run/beamOn 1");
-
         
 
         
