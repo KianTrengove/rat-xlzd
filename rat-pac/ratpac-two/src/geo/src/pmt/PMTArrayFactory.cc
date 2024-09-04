@@ -88,10 +88,24 @@ G4VPhysicalVolume *PMTArrayFactory::Construct(DBLinkPtr table) {
     pos[i] = pmtinfo_pos[idx];
     ptypes[i] = pmtinfo_types[idx];
     channels[i] = pmtinfo_channel_numbers[idx];
+
     if (rescale_radius) {
-      pos[i].setMag(new_radius);
+      double pmts_radius = sqrt(pos[i].x() * pos[i].x() + pos[i].y() * pos[i].y() +
+                                pos[i].z() * pos[i].z());  // Calculate the radius of the pmts
+
+      if (pmts_radius != 0) {
+        double scale_factor = new_radius / pmts_radius;  // Determine the scaling factor
+
+        // Apply the scaling factor to x and y, but leave z unchanged
+        pos[i].setX(pos[i].x() * scale_factor);
+        pos[i].setY(pos[i].y() * scale_factor);
+
+      } else {
+        // Handle the case where xy_radius is 0 to avoid division by zero
+        pos[i].setX(0);  // Align on the x-axis
+        pos[i].setY(0);  // Align on the y-axis
+      }
     }
-    pos[i] -= local_offset;
 
     if (orient_manual) {
       dir[i] = pmtinfo_dir[idx];
@@ -110,3 +124,4 @@ G4VPhysicalVolume *PMTArrayFactory::Construct(DBLinkPtr table) {
 }
 
 }  // namespace RAT
+
