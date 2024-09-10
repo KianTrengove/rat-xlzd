@@ -1,13 +1,3 @@
-'''
-Kian Trengove - August 6th 2024, 
-Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
-
-Implementation of Tray inside of RAT - Takes the enery deposits from Geant4/Rat and feeds them into Tray
-For questions, comments, concerns contact me at:
-kiantrengove@gmail.com or ktrengove@albany.edu
-'''
-
-
 #RAT Stuff
 from ratproc.base import Processor
 from rat import ROOT, RAT, ratiter
@@ -34,8 +24,14 @@ from icecube.DarwinChainModules import DarwinNESTQuantaCalculator, DarwinEnergyD
 import numpy as np
 
 class TrayProc(Processor):
-    def __init__(self, particle="e-"):
+    def __init__(self):
         self.tray = I3Tray()
+
+        #self.tray.AddService("I3SPRNGRandomServiceFactory", Seed=np.random.randint(0, 2 ** 31 - 1), StreamNum=1, NStreams=1000)
+        #sets the random seed. Seed can be changed to something else to make testing consitent.
+        #currently commented out because it results in a fatal error for some reason?
+
+        #self.frame = icetray.I3Frame(icetray.I3Frame.DAQ) 
 
         self.tray.AddModule( "I3InfiniteSource", Stream=icetray.I3Frame.DAQ)
         #This creates an infinite stream of empty frames, which we then fill below.
@@ -45,8 +41,6 @@ class TrayProc(Processor):
         self.deposits = []
 
         self.db = RAT.DB.Get()
-
-        self.name = particle #default particle is an electron
         
 
     def dsevent(self, ds):
@@ -56,51 +50,59 @@ class TrayProc(Processor):
         #Also note the caps, GetTotalScintCentroid uses TVector3
         time = mc_data.GetInitialScintTime()
         energy = mc_data.GetTotalScintEdep()
+        num_tracks = ds.GetMC().GetMCTrackCount()
+        name = ""
+        for trk in range(num_tracks):
+            if ds.GetMC().GetMCTrack(trk).GetParentID() == 0:
+                name = ds.GetMC().GetMCTrack(trk).GetParticleName() 
+                break
+                #the reason for having this in a loop is to avoid the edge case of when there are no tracks
+                #this does in fact occur when PythonProc.cc first initializes this, which I find strange
+                #unless, I'm badly misunderstanding how PythonProc.cc works (which is very possible),
+                #In this case, it seems like the ideal solution would be to modify PythonProc.cc, however to avoid modifying any kind of
+                #source code, I'm leaving this be - Kian August 1st 2024
         depositType = DarwinEnergyDeposit.NotSet
-        if self.name == "neutron":
+        if name == "neutron":
             depositType = DarwingEnergyDeposit.NR
-        elif self.name == "e-":
+        elif name == "e-":
             depositType = DarwinEnergyDeposit.beta
+        else:
+            depositType = DarwinEnergyDeposit.NR #I am using this as a debugging tool for now, while I sort out the Track stuff
         if depositType == DarwinEnergyDeposit.NotSet:
-            return 2 #see base.py; 2 = ABORT
-        
+            return 1 #see base.py 1 = FAIL
 
         self.deposits.append(DarwinEnergyDeposit(pos = pos, time = time, energy = energy, field = 200, type = depositType)) #field is temporary get that later
 
-        return 0 #see base.py; 0 = OK
+        return 0 #see base.py 0 = OK
 
 
     def finish(self):
         #this is setting up all of the frame stuff (geometry/simulation parameters)
 
         DriftField = 200 # 200 V/cm, just letting this be a standin for now
-        CathodeField = 15 #Same as drift field just temporary
+        CathodeField = 15 #Same as drift field temporary
         LXeDensity = self.db.GetLink("MATERIAL", "Xe").GetD("density") 
 
         self.tray.AddModule(DarwinSimParams, DriftField=DriftField, CathodeField = CathodeField, LXeDensity = LXeDensity, PMTQE=1.0) #letting Quantum Efficiency be 1 for now
         
-        r_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_min") #Note that this depends on the geometry actually being called inner_cryo like in cryo.geo
-        z_gate = self.db.GetLink("GEO", "inner_cryo").GetD("size_z")*2 #Don't know where the gate is, I'm just putting it at the top of the inner cryo for now, even though that's definately incorrect
+        r_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_max") #Note that this depends on the geometry actually being called inner_cryo like in cryo.geo
+        z_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_max")
         z_lxe = self.db.GetLink("GEO", "xe_skin").GetD("size_z")*2 #Geant uses half z, NEST doesn't
         z_pmt_top = self.db.GetLink("PMTINFO_inner").GetDArray("z")[0] #likewise for PMTINFO_inner
         z_pmt_bottom = self.db.GetLink("PMTINFO_inner").GetDArray("z")[-1]
         z_cathode = self.db.GetLink("PMTINFO_inner").GetDArray("z")[-1] 
         #also I'm just putting the cathode in the same location as the pmt since it's not modeled in the geometry
-        self.tray.AddModule(XLZDGeometryParams, r_tpc=r_tpc, z_gate=z_gate, z_lxe=z_lxe, z_pmt_top=z_pmt_top, z_pmt_bottom=z_pmt_bottom, z_cathode=z_cathode) 
+        self.tray.AddModule(DarwinGeometryParams) 
+        #I will have to make my own version for XLZD eventually
 
         self.tray.AddModule(ConfigureG4)
         self.tray.AddModule(RATDeposit, MCDeposits=self.deposits)
         self.tray.AddModule(DarwinNESTQuantaCalculator) #after all the frames with the energy depositions have been calculated we get the quanta
-        
-        #TODO: Currently the DarwinNestQuantaCalculator uses the Xenon-10 detector template, but really we should replace this with something more modular that takes inputs from RAT
 
         # Module that writes the output
-        #self.tray.AddModule("I3Writer", "writer", Filename="output.i3.bz2") #if we prefer to keep it in the tray format use this instead
+        #self.tray.AddModule("I3Writer", "writer", Filename="output.i3.bz2")
         self.tray.AddModule(ROOTOutput, Filename="output.root", TreeLength=len(self.deposits))
         self.tray.Execute()
-
-        
-
         
 
 class RATDeposit(icetray.I3Module):
@@ -118,7 +120,7 @@ class RATDeposit(icetray.I3Module):
         self.mcdeposit = self.GetParameter("MCDeposits")
         self.count = 0
         self.nevents = len(self.mcdeposit)
-
+        
 
 
     def DAQ(self, frame):
@@ -141,6 +143,7 @@ class ConfigureG4(icetray.I3Module):
         To prove this as a proof of concept, I've just added this module that does nothing else except set G4InputExtraDeps as True
         """
         icetray.I3Module.__init__(self, context)
+        self.AddParameter("Dummy Parameter", "This is a dummy parameter that has to exist for the module I think", "")
 
     def Configure(self):
         pass
@@ -186,49 +189,3 @@ class ROOTOutput(icetray.I3Module):
         self.PushFrame(frame)
     
 
-class XLZDGeometryParams(icetray.I3Module):
-    def __init__(self, context):
-        icetray.I3Module.__init__(self, context)
-        self.AddParameter("Outname", "Name of parameters in sim frame", "DarwinGeometry" ) 
-        #Note that I'm continuin to keep this as DarwinGeometry to keep it consitent with the rest of the Darwin Modules
-        #And we can't just use the DarwinGeometryParams because those have the Darwin Geometry Parameters hard coded in
-        self.AddParameter("r_tpc", "Radius of the tpc", 0)
-        self.AddParameter("z_gate", "Z coordinates of the gate", 0)
-        self.AddParameter("z_lxe", "Z coordinate of the lXe", 0)
-        self.AddParameter("z_pmt_top", "Position of the top pmts", 0)
-        self.AddParameter("z_pmt_bottom", "Position of the bottom pmts", 0)
-        self.AddParameter("z_cathode", "Position of the cathode", 0)
-
-
-    def Configure(self):
-        self.has_gframe=False
-        self.outname=self.GetParameter("Outname")
-        self.r_tpc = self.GetParameter("r_tpc")
-        self.z_gate = self.GetParameter("z_gate")
-        self.z_lxe = self.GetParameter("z_lxe")
-        self.z_pmt_top = self.GetParameter("z_pmt_top")
-        self.z_pmt_bottom = self.GetParameter("z_pmt_bottom")
-        self.z_cathode = self.GetParameter("z_cathode")
-        self.SetFunctions()
-    def Geometry(self,frame=None):
-        if frame is None:
-            frame = icetray.I3Frame(icetray.I3Frame.Geometry)       
-        gparams=dataclasses.I3MapStringDouble()
-        gparams['z_gate']=self.z_gate
-        gparams['z_cathode']=self.z_cathode
-        gparams['r_tpc']=self.r_tpc
-        gparams['z_pmt_bottom']=self.z_pmt_bottom
-        gparams['z_pmt_top']=self.z_pmt_top
-        gparams['z_lxe']=self.z_lxe
-        frame[self.outname]=gparams
-        self.PushFrame(frame)
-    def AddGFrame(self, frame):
-        if not self.has_gframe:
-            self.Geometry()
-        self.has_gframe=True
-        self.PushFrame(frame)
-    def SetFunctions(self):
-        self.Calibration=self.AddGFrame
-        self.Simulation=self.AddGFrame
-        self.DAQ=self.AddGFrame
-        self.Physics=self.AddGFrame
