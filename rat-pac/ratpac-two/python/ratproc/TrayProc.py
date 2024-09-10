@@ -1,3 +1,12 @@
+'''
+Kian Trengove - August 6th 2024, 
+Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
+
+Implementation of Tray inside of RAT - Takes the enery deposits from Geant4/Rat and feeds them into Tray
+For questions, comments, concerns contact me at:
+kiantrengove@gmail.com or ktrengove@albany.edu
+'''
+
 #RAT Stuff
 from ratproc.base import Processor
 from rat import ROOT, RAT, ratiter
