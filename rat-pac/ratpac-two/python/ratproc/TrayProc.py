@@ -35,14 +35,8 @@ import numpy as np
 #from memory_profiler import profile
 
 class TrayProc(Processor):
-    def __init__(self):
+    def __init__(self, particle='e-'):
         self.tray = I3Tray()
-
-        #self.tray.AddService("I3SPRNGRandomServiceFactory", Seed=np.random.randint(0, 2 ** 31 - 1), StreamNum=1, NStreams=1000)
-        #sets the random seed. Seed can be changed to something else to make testing consitent.
-        #currently commented out because it results in a fatal error for some reason?
-
-        #self.frame = icetray.I3Frame(icetray.I3Frame.DAQ) 
 
         self.tray.AddModule( "I3InfiniteSource", Stream=icetray.I3Frame.DAQ)
         #This creates an infinite stream of empty frames, which we then fill below.
@@ -53,6 +47,7 @@ class TrayProc(Processor):
 
         self.db = RAT.DB.Get()
         
+        self.name = particle #default particle is an electron
 
     def dsevent(self, ds):
         mc_data = ds.GetMC().GetMCSummary() #gets the monte carlo information
@@ -61,30 +56,17 @@ class TrayProc(Processor):
         #Also note the caps, GetTotalScintCentroid uses TVector3
         time = mc_data.GetInitialScintTime()
         energy = mc_data.GetTotalScintEdep()
-        num_tracks = ds.GetMC().GetMCTrackCount()
-        name = ""
-        for trk in range(num_tracks):
-            if ds.GetMC().GetMCTrack(trk).GetParentID() == 0:
-                name = ds.GetMC().GetMCTrack(trk).GetParticleName() 
-                break
-                #the reason for having this in a loop is to avoid the edge case of when there are no tracks
-                #this does in fact occur when PythonProc.cc first initializes this, which I find strange
-                #unless, I'm badly misunderstanding how PythonProc.cc works (which is very possible),
-                #In this case, it seems like the ideal solution would be to modify PythonProc.cc, however to avoid modifying any kind of
-                #source code, I'm leaving this be - Kian August 1st 2024
         depositType = DarwinEnergyDeposit.NotSet
-        if name == "neutron":
-            depositType = DarwinEnergyDeposit.NR
-        elif name == "e-":
+        if self.name == "neutron":
+            depositType = DarwingEnergyDeposit.NR
+        elif self.name == "e-":
             depositType = DarwinEnergyDeposit.beta
-        else:
-            depositType = DarwinEnergyDeposit.NR #I am using this as a debugging tool for now, while I sort out the Track stuff
         if depositType == DarwinEnergyDeposit.NotSet:
-            return 1 #see base.py 1 = FAIL
-
+            return 2 #see base.py; 2 = ABORT
+        
         self.deposits.append(DarwinEnergyDeposit(pos = pos, time = time, energy = energy, field = 200, type = depositType)) #field is temporary get that later
 
-        return 0 #see base.py 0 = OK
+        return 0 #see base.py; 0 = OK
 
     def finish(self):
         #this is setting up all of the frame stuff (geometry/simulation parameters)
@@ -96,14 +78,15 @@ class TrayProc(Processor):
         self.tray.AddModule(DarwinSimParams, DriftField=DriftField, CathodeField = CathodeField, LXeDensity = LXeDensity, PMTQE=1.0) #letting Quantum Efficiency be 1 for now
         
         r_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_max") #Note that this depends on the geometry actually being called inner_cryo like in cryo.geo
-        z_tpc = self.db.GetLink("GEO", "inner_cryo").GetD("r_max")
+        z_gate = self.db.GetLink("GEO", "inner_cryo").GetD("size_z")*2 #Don't know where the gate is, I'm just putting it at the top of the inner cryo for now, even though that's definately incorrect
         z_lxe = self.db.GetLink("GEO", "xe_skin").GetD("size_z")*2 #Geant uses half z, NEST doesn't
         z_pmt_top = self.db.GetLink("PMTINFO_inner").GetDArray("z")[0] #likewise for PMTINFO_inner
         z_pmt_bottom = self.db.GetLink("PMTINFO_inner").GetDArray("z")[-1]
         z_cathode = self.db.GetLink("PMTINFO_inner").GetDArray("z")[-1] 
         #also I'm just putting the cathode in the same location as the pmt since it's not modeled in the geometry
-        self.tray.AddModule(DarwinGeometryParams) 
+        #self.tray.AddModule(DarwinGeometryParams) 
         #I will have to make my own version for XLZD eventually
+        self.tray.AddModule(XLZDGeometryParams, r_tpc=r_tpc, z_gate=z_gate, z_lxe=z_lxe, z_pmt_top=z_pmt_top, z_pmt_bottom=z_pmt_bottom, z_cathode=z_cathode) 
 
         self.tray.AddModule(ConfigureG4)
         self.tray.AddModule(RATDeposit, MCDeposits=self.deposits)
