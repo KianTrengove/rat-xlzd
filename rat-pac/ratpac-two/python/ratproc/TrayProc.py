@@ -9,6 +9,7 @@ kiantrengove@gmail.com or ktrengove@albany.edu
 
 #RAT Stuff
 from ratproc.base import Processor
+from ratproc.S1PhotonPropagator import S1PhotonPropagator
 from rat import ROOT, RAT, ratiter
 from rat.parser import create_evaluation_tree
 
@@ -29,8 +30,9 @@ except:
     from icecube import DarwinChainModules
 
 
-from icecube.DarwinChainModules import DarwinNESTQuantaCalculator, DarwinEnergyDeposit, I3VectorDarwinEnergyDeposit, DarwinSimParams, DarwinGeometryParams
+from icecube.DarwinChainModules import DarwinNESTQuantaCalculator, DarwinEnergyDeposit, I3VectorDarwinEnergyDeposit, DarwinSimParams, DarwinGeometryParams, DarwinS2Photons, DarwinSimpleS2Drift
 import numpy as np
+#from memory_profiler import profile
 
 class TrayProc(Processor):
     def __init__(self):
@@ -72,7 +74,7 @@ class TrayProc(Processor):
                 #source code, I'm leaving this be - Kian August 1st 2024
         depositType = DarwinEnergyDeposit.NotSet
         if name == "neutron":
-            depositType = DarwingEnergyDeposit.NR
+            depositType = DarwinEnergyDeposit.NR
         elif name == "e-":
             depositType = DarwinEnergyDeposit.beta
         else:
@@ -83,7 +85,6 @@ class TrayProc(Processor):
         self.deposits.append(DarwinEnergyDeposit(pos = pos, time = time, energy = energy, field = 200, type = depositType)) #field is temporary get that later
 
         return 0 #see base.py 0 = OK
-
 
     def finish(self):
         #this is setting up all of the frame stuff (geometry/simulation parameters)
@@ -107,13 +108,17 @@ class TrayProc(Processor):
         self.tray.AddModule(ConfigureG4)
         self.tray.AddModule(RATDeposit, MCDeposits=self.deposits)
         self.tray.AddModule(DarwinNESTQuantaCalculator) #after all the frames with the energy depositions have been calculated we get the quanta
+        #self.tray.AddModule(DarwinSimpleS2Drift) #S2Electrons calculated for S2 Photon generation  
+        ### TODO: currently path and number of pmts are hard coded, need to fix this for others accessing the module
+        #self.tray.AddModule(S1PhotonPropagator)
+        #self.tray.AddModule(DarwinS2Photons, NTPCPMTs = 1718, NTopPMTs = 859, splinefile='/home/scontre9/ratpac-setup/ratpac/Tray/DarwinChainModules/resources/maps/S2_spline_data.npz')
 
         # Module that writes the output
         #self.tray.AddModule("I3Writer", "writer", Filename="output.i3.bz2")
         self.tray.AddModule(ROOTOutput, Filename="output.root", TreeLength=len(self.deposits))
         self.tray.Execute()
         
-
+        
 class RATDeposit(icetray.I3Module):
     def __init__(self, context):
         """
@@ -174,13 +179,31 @@ class ROOTOutput(icetray.I3Module):
         self.file = ROOT.TFile.Open(self.GetParameter("Filename"), "RECREATE")
         self.tree = ROOT.TTree("tree1", "tree1")
 
+        ###From DarwinNESTQuantaCalculator
         self.photon_branch = np.array([0], dtype=np.float64)
         self.electron_branch = np.array([0], dtype=np.float64)
         self.exciton_branch = np.array([0], dtype=np.float64) #This array will get filled with the data we want from the deposits and then write that to the root file
         self.tree.Branch("photon",  self.photon_branch,  'photon/D') #/D indicates that the data type being stored is a double
         self.tree.Branch("electron",  self.electron_branch,  'electron/D')
         self.tree.Branch("exciton",  self.exciton_branch,  'exciton/D')
-        
+
+        ###From DarwinS2Photons
+        '''
+        self.S2HitTimes_branch = np.zeros(1000, dtype=np.float32)
+        self.S2HitIDs_branch = np.zeros(1000, dtype=np.int32)
+        self.S2EffFactor_branch = np.zeros([0], dtype=np.float32)
+        self.S2HitCount_branch = np.array([0], dtype=np.int32)
+        self.S2NPhotons_branch = np.array([0], dtype=np.int32)
+        self.S2ScintillationTiming_branch = np.array([0], dtype=np.float64)
+        self.S2PropagationTiming_branch = np.array([0], dtype=np.float64)
+        self.tree.Branch("S2HitTimes",  self.S2HitTimes_branch,  'S2HitTimes[1000]/D')
+        self.tree.Branch("S2HitIDs", self.S2HitIDs_branch, 'S2HitIDs[1000]/I')
+        self.tree.Branch("S2EffFactor", self.S2EffFactor_branch, 'S2EffFactor/D')
+        self.tree.Branch("S2HitCount", self.S2HitCount_branch, 'S2HitCount/I')
+        self.tree.Branch("S2NPhotonsGenerated", self.S2NPhotons_branch, 'S2NPhotonsGenerated/I')
+        self.tree.Branch("S2ScintillationTiming", self.S2ScintillationTiming_branch, 'S2ScintillationTiming/D')
+        self.tree.Branch("S2PropagationTiming", self.S2PropagationTiming_branch, 'S2PropagationTiming/D')
+        '''
         self.ncount = 0
         self.nevents = self.GetParameter("TreeLength")
 
@@ -191,10 +214,68 @@ class ROOTOutput(icetray.I3Module):
             self.electron_branch[0] = deposits[i].n_electrons
             self.exciton_branch[0] = deposits[i].n_excitons
             self.tree.Fill()
+        '''
+        if 'S2PhotonHitChannel' in frame:
+            self.S2HitTimes_branch[0] = frame["S2PhotonHitTime"]
+            self.S2HitIDs_branch[0] = frame["S2PhotonHitChannel"]
+            self.S2EffFactor_branch[0] = frame["S2PhotonEffFactor"]
+            self.S2HitCount_branch[0] = frame["S2PhotonHitPerSource"]
+            self.S2NPhotons_branch[0] = frame["S2PhotonNGeneratedPhotons"]
+            self.S2ScintillationTiming_branch[0] = frame["S2PhotonScintillationTiming"]
+            self.S2PropagationTiming_branch[0] = frame["S2PhtonPropagationTiming"]
+            self.tree.Fill()
+        '''
         self.ncount += 1
         if self.ncount == self.nevents:
             self.file.Write()
             self.file.Close()
         self.PushFrame(frame)
-    
 
+class XLZDGeometryParams(icetray.I3Module):
+    def __init__(self, context):
+        icetray.I3Module.__init__(self, context)
+        self.AddParameter("Outname", "Name of parameters in sim frame", "DarwinGeometry" ) 
+        #Note that I'm continuin to keep this as DarwinGeometry to keep it consitent with the rest of the Darwin Modules
+        #And we can't just use the DarwinGeometryParams because those have the Darwin Geometry Parameters hard coded in
+        self.AddParameter("r_tpc", "Radius of the tpc", 0)
+        self.AddParameter("z_gate", "Z coordinates of the gate", 0)
+        self.AddParameter("z_lxe", "Z coordinate of the lXe", 0)
+        self.AddParameter("z_pmt_top", "Position of the top pmts", 0)
+        self.AddParameter("z_pmt_bottom", "Position of the bottom pmts", 0)
+        self.AddParameter("z_cathode", "Position of the cathode", 0)
+
+    def Configure(self):
+        self.has_gframe=False
+        self.outname=self.GetParameter("Outname")
+        self.r_tpc = self.GetParameter("r_tpc")
+        self.z_gate = self.GetParameter("z_gate")
+        self.z_lxe = self.GetParameter("z_lxe")
+        self.z_pmt_top = self.GetParameter("z_pmt_top")
+        self.z_pmt_bottom = self.GetParameter("z_pmt_bottom")
+        self.z_cathode = self.GetParameter("z_cathode")
+        self.SetFunctions()
+
+    def Geometry(self,frame=None):
+        if frame is None:
+            frame = icetray.I3Frame(icetray.I3Frame.Geometry)       
+        gparams=dataclasses.I3MapStringDouble()
+        gparams['z_gate']=self.z_gate
+        gparams['z_cathode']=self.z_cathode
+        gparams['r_tpc']=self.r_tpc
+        gparams['z_pmt_bottom']=self.z_pmt_bottom
+        gparams['z_pmt_top']=self.z_pmt_top
+        gparams['z_lxe']=self.z_lxe
+        frame[self.outname]=gparams
+        self.PushFrame(frame)
+
+    def AddGFrame(self, frame):
+        if not self.has_gframe:
+            self.Geometry()
+        self.has_gframe=True
+        self.PushFrame(frame)
+
+    def SetFunctions(self):
+        self.Calibration=self.AddGFrame
+        self.Simulation=self.AddGFrame
+        self.DAQ=self.AddGFrame
+        self.Physics=self.AddGFrame
