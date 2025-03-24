@@ -1,0 +1,31 @@
+//
+//Kian Trengove - May 16th 2024, 
+//Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
+
+//Implementation of the XLZD geometry for 40, 60, 80t based on the implementation in baccarat
+//For questions, comments, concerns contact me at:
+//kiantrengove@gmail.com or ktrengove@albany.edu
+//
+
+//this is just for Cobalt since rat doesn't use it by default
+{
+name: "ELEMENT",
+index: "Cobalt", 
+valid_begin: [0, 0],
+valid_end: [0, 0],
+
+SYMBOL: "Co",
+z: 27,
+a: 58.9331950,
+}
+
+{
+name: "ELEMENT",
+index: "Xenon", 
+valid_begin: [0, 0],
+valid_end: [0, 0],
+
+SYMBOL: "Xe",
+z: 54,
+a: 131.29,
+}

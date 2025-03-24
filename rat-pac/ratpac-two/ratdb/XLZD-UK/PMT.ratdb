@@ -1,0 +1,51 @@
+//
+//Kian Trengove - May 16th 2024, 
+//Written while at the University of California, Los Angeles supervised by Dr. Alvine Kamaha
+
+//Implementation of the XLZD geometry for 40, 60, 80t based on the implementation in baccarat
+//For questions, comments, concerns contact me at:
+//kiantrengove@gmail.com or ktrengove@albany.edu
+//
+
+
+//PMT file for R11410
+{
+name: "PMT",
+index: "r11410",
+//construction options:
+//cuboid: self-explanatory (cube)
+//LAPPD: was made for 1 specific PMT,  we don't need to consider it
+//revolution: light bulb shaped. Ex: https://www.hamamatsu.com/eu/en/product/optical-sensors/pmt/pmt_tube-alone/head-on-type/R7081.html
+//toroidal: more bowl than toroid shaped. Ex: https://et-enterprises.com/products/photomultipliers/product/p9390b-series
+valid_begin: [0,0],
+valid_end: [0,0],
+construction: "toroidal",
+dynode_material: "kovar",
+glass_material: "quartz",
+pmt_vacuum_material: "pmt_vacuum",
+photocathode_surface: "photocathode_R11410",
+mirror_surface: "mirror",
+dynode_surface: "kovar",
+
+//the documentation for how the toroidal pmts are constructed is completely absent.
+//so I've just done my best by following ToroidalPMTContruction.cc
+//dynode stuff is mostly self-evident
+
+//z_edge, rho_edge, and z_origin, seem to be so that you can construct different layers, with each layer being a column
+dynode_radius: 27.5, // mm
+dynode_top:   -30.0, // mm
+wall_thickness: 3.0, // mm
+
+z_edge:   [ 75.00, 53.06,   0.00, -53.06, -73.86,  -85.00, -215.00],
+rho_edge: [  0.00, 72.58, 101.00,  72.58,  44.32,   42.00, 42.00],
+z_origin: [-56.00,  0.00,   0.00,  56.00, -85.00, -215.00],
+
+noise_rate: 10000.0, // Hz
+}
+
+//Being honest, I still don't really understand the z_edge and z_origin options and still need to research them more
+//I copied the z values from a similiarly shaped pmt that rat already has
+//I've yet to find an instance where z_origin changes teh geometry, so I just set them all to 0
+//Changing z_edge in almost any way has a habit of resulting in a crash
+
+
